@@ -23,7 +23,7 @@ namespace HrProject.Controllers
 		private readonly IWeeklyHolidayRepository weeklyHolidayRepo;
 		private readonly IVacationsRepository vacationsRepository;
 
-		public SalaryController(IEmployeeRepository employeeRepo, IGeneralSettingRepository generalSettingRepo, IAttendanceRepositary attendanceRepo, IWeeklyHolidayRepository weeklyHolidayRepo,IVacationsRepository vacationsRepository)
+		public SalaryController(IEmployeeRepository employeeRepo, IGeneralSettingRepository generalSettingRepo, IAttendanceRepositary attendanceRepo, IWeeklyHolidayRepository weeklyHolidayRepo, IVacationsRepository vacationsRepository)
 		{
 			this.weeklyHolidayRepo = weeklyHolidayRepo;
 			this.vacationsRepository = vacationsRepository;
@@ -155,14 +155,14 @@ namespace HrProject.Controllers
 			var vacations = vacationsRepository.GetAll();
 			foreach (var item in vacations)
 			{
-				if(targetDate.Month == Convert.ToDateTime(item.Date).Month)
+				if (targetDate.Month == Convert.ToDateTime(item.Date).Month)
 					holidays2++;
 			}
 			int attendanceDays = attendanceRepo.AttendanceDays(empId, targetDate);
 			//double SalaryPerDay = employeeRepo.GetSalary(empId) / DateTime.DaysInMonth(year, month);
 			double SalaryPerDay = employeeRepo.GetSalary(empId) / 30;
 			int Holidays = (weeklyHolidayRepo.GetAllHolidays().Select(x => x.Holiday).Count()) * 4 + (holidays2);
-			int absentDays = /*DateTime.DaysInMonth(year, month)*/ 30 - (Holidays + attendanceDays);
+			int absentDays =  30 - (Holidays + attendanceDays);
 
 			int overTimePricePerHour = generalSettingRepo.OverTimePricePerHour();
 			int discountTimePricePerHour = generalSettingRepo.DiscountTimePricePerHour();
@@ -368,4 +368,4 @@ namespace HrProject.Controllers
 		#endregion
 
 	}
-}
+	} 

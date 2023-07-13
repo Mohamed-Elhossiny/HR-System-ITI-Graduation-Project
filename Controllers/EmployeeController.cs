@@ -83,7 +83,20 @@ namespace HrProject.Controllers
                 LeaveTime = TimeSpan.Parse(collection.FirstOrDefault(x => x.Key == "LeaveTime").Value),
                 Departmentid = Convert.ToInt32(collection.FirstOrDefault(x => x.Key == "DepartmentList").Value),
             };
-            _employeeRepository.Insert(newEmp);
+
+            var flag = _employeeRepository.Insert(newEmp);
+            if (flag == false)
+            {
+                TempData["AlertMessage"] = "This National ID has already Registered Before.";
+                var departments = _departmentRepository.GetAllDepartments();
+                ViewBag.DepartmentList = departments.Select(x => new SelectListItem
+                {
+                    Text = x.DeptName,
+                    Value = x.Id.ToString()
+                });
+                ViewBag.Cities = new List<string> { "Cairo", "Alexandria", "Giza", "Tanta", "Damanhour", "Menoufia", "Mansoura", "Qena", "Luxor", "Aswan", "Other" };
+                return View();
+            }
 
             return RedirectToAction("Index");
         }
